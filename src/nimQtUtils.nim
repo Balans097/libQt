@@ -30,16 +30,18 @@
 ## Компиляция:
 ##   nim cpp --passC:"-std=c++20" app.nim
 
-import strutils
+import strutils, math
 
-# ── Пути заголовков (Windows/MSYS2 UCRT64) ───────────────────────────────────
-{.passC: "-IC:/msys64/ucrt64/include".}
-{.passC: "-IC:/msys64/ucrt64/include/qt6".}
-{.passC: "-IC:/msys64/ucrt64/include/qt6/QtWidgets".}
-{.passC: "-IC:/msys64/ucrt64/include/qt6/QtGui".}
-{.passC: "-IC:/msys64/ucrt64/include/qt6/QtCore".}
-{.passC: "-DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB".}
-{.passL: "-LC:/msys64/ucrt64/lib -lQt6Widgets -lQt6Gui -lQt6Core".}
+# ── Пути заголовков (кросс-платформенные) ────────────────────────────────────
+when defined(windows):
+  {.passC: "-IC:/msys64/ucrt64/include".}
+  {.passC: "-IC:/msys64/ucrt64/include/qt6".}
+  {.passC: "-IC:/msys64/ucrt64/include/qt6/QtWidgets".}
+  {.passC: "-IC:/msys64/ucrt64/include/qt6/QtGui".}
+  {.passC: "-IC:/msys64/ucrt64/include/qt6/QtCore".}
+  {.passC: "-DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB".}
+  {.passL: "-LC:/msys64/ucrt64/lib -lQt6Widgets -lQt6Gui -lQt6Core".}
+# На Linux пути передаются снаружи через pkg-config (Makefile или командная строка)
 
 # ── Все необходимые заголовки Qt ─────────────────────────────────────────────
 {.emit: """
@@ -381,17 +383,17 @@ proc qsRepeat*(q: QString, n: int): QString =
   let ni = n.cint
   {.emit: "`result` = `q`.repeated(`ni`);".}
 
-proc qsIndexOf*(q, sub: QString, from: int = 0,
+proc qsIndexOf*(q, sub: QString, startPos: int = 0,
                 caseSensitive: bool = true): int =
-  ## Найти первое вхождение sub в q, начиная с позиции from.
+  ## Найти первое вхождение sub в q, начиная с позиции startPos.
   ## Возвращает -1 если не найдено.
-  let fi = from.cint; let cs = caseSensitive.cint; var v: cint
+  let fi = startPos.cint; let cs = caseSensitive.cint; var v: cint
   {.emit: "`v` = `q`.indexOf(`sub`, `fi`, `cs` ? Qt::CaseSensitive : Qt::CaseInsensitive);".}
   result = v.int
 
-proc qsLastIndexOf*(q, sub: QString, from: int = -1): int =
+proc qsLastIndexOf*(q, sub: QString, startPos: int = -1): int =
   ## Найти последнее вхождение sub в q.
-  let fi = from.cint; var v: cint
+  let fi = startPos.cint; var v: cint
   {.emit: "`v` = `q`.lastIndexOf(`sub`, `fi`);".}
   result = v.int
 
@@ -676,7 +678,7 @@ proc qbaTrimmed*(ba: QByteArray): QByteArray =
 
 proc qbaAt*(ba: QByteArray, i: int): byte =
   ## Байт по индексу.
-  let ii = i.cint; var b: cuchar
+  let ii = i.cint; var b: uint8
   {.emit: "`b` = (unsigned char)`ba`.at(`ii`);".}
   result = b.byte
 
@@ -1029,7 +1031,6 @@ proc pointFLengthSq*(p: QPointF): float64 =
 
 proc pointFLength*(p: QPointF): float64 =
   ## Расстояние от начала координат.
-  import math
   result = sqrt(pointFLengthSq(p))
 
 proc toNimPoint*(p: QPoint): NimPoint   = (x: pointX(p), y: pointY(p))

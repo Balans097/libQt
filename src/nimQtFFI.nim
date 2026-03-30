@@ -25,13 +25,15 @@
 # Для Linux/macOS используйте pkg-config вместо ручных путей:
 #   {.passC: gorge("pkg-config --cflags Qt6Core Qt6Gui Qt6Widgets").}
 #   {.passL: gorge("pkg-config --libs Qt6Core Qt6Gui Qt6Widgets").}
-{.passC: "-IC:/msys64/ucrt64/include".}
-{.passC: "-IC:/msys64/ucrt64/include/qt6".}
-{.passC: "-IC:/msys64/ucrt64/include/qt6/QtWidgets".}
-{.passC: "-IC:/msys64/ucrt64/include/qt6/QtGui".}
-{.passC: "-IC:/msys64/ucrt64/include/qt6/QtCore".}
-{.passC: "-DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB".}
-{.passL: "-LC:/msys64/ucrt64/lib -lQt6Widgets -lQt6Gui -lQt6Core".}
+when defined(windows):
+  {.passC: "-IC:/msys64/ucrt64/include".}
+  {.passC: "-IC:/msys64/ucrt64/include/qt6".}
+  {.passC: "-IC:/msys64/ucrt64/include/qt6/QtWidgets".}
+  {.passC: "-IC:/msys64/ucrt64/include/qt6/QtGui".}
+  {.passC: "-IC:/msys64/ucrt64/include/qt6/QtCore".}
+  {.passC: "-DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB".}
+  {.passL: "-LC:/msys64/ucrt64/lib -lQt6Widgets -lQt6Gui -lQt6Core".}
+# На Linux пути передаются снаружи через pkg-config
 
 # ── Обнаружение платформы ─────────────────────────────────────────────────────
 const
@@ -225,8 +227,7 @@ type
     WF_SubWindow        = 0x00000080  ## Подокно (QMdiSubWindow)
     WF_ForeignWindow    = 0x00000101  ## Внешнее окно другого приложения
     WF_CoverWindow      = 0x00000201  ## Обложка (мобильные ОС)
-    WF_FramelessWindowHint    = 0x00000800  ## Без рамки окна
-    WF_NoTitleHint            = 0x00000800  ## Псевдоним FramelessWindowHint
+    WF_FramelessWindowHint    = 0x00000800  ## Без рамки окна (= WF_NoTitleHint в Qt)
     WF_CustomizeWindowHint    = 0x02000000  ## Кастомный набор декораций
     WF_WindowTitleHint        = 0x00001000  ## Показать заголовок
     WF_WindowSystemMenuHint   = 0x00002000  ## Системное меню
@@ -430,7 +431,7 @@ type
     ## Минимум + растяжка
     SPMinimumExpanding = 0x31
     ## Игнорировать sizeHint (любой размер)
-    SPIgnored          = 0x38
+    SPIgnored          = 0x3c
 
 # ── Qt::LayoutDirection ───────────────────────────────────────────────────────
 type
@@ -714,7 +715,7 @@ type
     ## Рекурсивный поиск (модели с иерархией)
     MatchRecursive     = 32
     ## Поиск по всему (начинать с начала при достижении конца)
-    MatchWrap          = 32
+    MatchWrap          = 64
 
 # ── Qt::FindChildOption ───────────────────────────────────────────────────────
 type

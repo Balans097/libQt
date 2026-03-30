@@ -26,13 +26,15 @@
 ##
 ## Импортирует: nimQtUtils (типы), nimQtFFI (константы)
 
-{.passC: "-IC:/msys64/ucrt64/include".}
-{.passC: "-IC:/msys64/ucrt64/include/qt6".}
-{.passC: "-IC:/msys64/ucrt64/include/qt6/QtWidgets".}
-{.passC: "-IC:/msys64/ucrt64/include/qt6/QtGui".}
-{.passC: "-IC:/msys64/ucrt64/include/qt6/QtCore".}
-{.passC: "-DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB".}
-{.passL: "-LC:/msys64/ucrt64/lib -lQt6Widgets -lQt6Gui -lQt6Core".}
+when defined(windows):
+  {.passC: "-IC:/msys64/ucrt64/include".}
+  {.passC: "-IC:/msys64/ucrt64/include/qt6".}
+  {.passC: "-IC:/msys64/ucrt64/include/qt6/QtWidgets".}
+  {.passC: "-IC:/msys64/ucrt64/include/qt6/QtGui".}
+  {.passC: "-IC:/msys64/ucrt64/include/qt6/QtCore".}
+  {.passC: "-DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB".}
+  {.passL: "-LC:/msys64/ucrt64/lib -lQt6Widgets -lQt6Gui -lQt6Core".}
+# На Linux пути передаются снаружи через pkg-config
 
 
 import nimQtUtils

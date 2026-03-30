@@ -58,7 +58,7 @@ NIM_COMMON := \
   --mm:orc \
   --exceptions:cpp \
   --passC:"-std=c++20" \
-  --path:"D:/Work/Nim/Projects/LibQT/libqt/src"
+  --path:"$(CURDIR)"
 
 NIM_RELEASE := \
   $(NIM_COMMON) \
