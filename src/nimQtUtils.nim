@@ -30,6 +30,7 @@
 ## Компиляция:
 ##   nim cpp --passC:"-std=c++20" app.nim
 
+import nimQtCore
 import strutils, math
 
 # ── Пути заголовков (кросс-платформенные) ────────────────────────────────────
@@ -83,8 +84,8 @@ when defined(windows):
 type
   ## Строка Qt (UTF-16 внутри, умное копирование COW).
   ## Основной строковый тип Qt6 — используется во всех виджет-API.
-  QString*       {.importcpp: "QString",
-                   header: "<QString>".}       = object
+  #[ QString*       {.importcpp: "QString",
+                   header: "<QString>".}       = object ]#
 
   ## Список строк Qt (QList<QString>).
   QStringList*   {.importcpp: "QStringList",
@@ -96,8 +97,8 @@ type
 
   ## Универсальный тип-значение Qt. Хранит QString, int, double, bool,
   ## QColor, QFont, QDateTime, QList<QVariant> и многое другое.
-  QVariant*      {.importcpp: "QVariant",
-                   header: "<QVariant>".}      = object
+  #[ QVariant*      {.importcpp: "QVariant",
+                   header: "<QVariant>".}      = object ]#
 
   ## Цвет Qt (RGB + alpha, поддерживает HSV, HSL, CMYK).
   QColor*        {.importcpp: "QColor",

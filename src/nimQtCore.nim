@@ -37,7 +37,6 @@ when defined(windows):
 # На Linux пути передаются снаружи через pkg-config
 
 
-import nimQtUtils
 import nimQtFFI
 import strutils
 
@@ -146,6 +145,11 @@ type
   QMarginsF*             {.importcpp: "QMarginsF",             header: "<QMarginsF>".}             = object
   QBuffer*               {.importcpp: "QBuffer",               header: "<QBuffer>".}               = object
   QIODevice*             {.importcpp: "QIODevice",             header: "<QIODevice>".}             = object
+  QString*               {.importcpp: "QString",               header: "<QString>".}               = object
+  QStringList*           {.importcpp: "QStringList",           header: "<QStringList>".}           = object
+  QDate*                 {.importcpp: "QDate",                 header: "<QDate>".}                 = object
+  QDateTime*             {.importcpp: "QDateTime",             header: "<QDateTime>".}             = object
+  QVariant*              {.importcpp: "QVariant",              header: "<QVariant>".}              = object
 
 # Удобные псевдонимы указателей
 type

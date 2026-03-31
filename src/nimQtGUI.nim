@@ -221,17 +221,20 @@ type
 
   QFontStyleHint* {.size: sizeof(cint).} = enum
     AnyStyle    = 0
-    SansSerif   = 2
     Serif       = 1
-    Monospace   = 7
+    SansSerif   = 2
+    Decorative  = 3
     Cursive     = 5
     Fantasy     = 6
-    Decorative  = 3
+    Monospace   = 7
     System      = 9
-    Helvetica   = 2
-    Times       = 1
-    Courier     = 7
 
+const
+  Helvetica* = QFontStyleHint.SansSerif  ## алиас Qt: Helvetica == SansSerif
+  Times*     = QFontStyleHint.Serif       ## алиас Qt: Times == Serif
+  Courier*   = QFontStyleHint.Monospace   ## алиас Qt: Courier == Monospace
+
+type
   QFontStyleStrategy* {.size: sizeof(cint).} = enum
     PreferDefault    = 0x0001
     PreferBitmap     = 0x0002
@@ -273,20 +276,26 @@ type
     Disabled  = 0
     Active    = 1
     Inactive  = 2
-    Normal    = 1
 
+const
+  Normal* = QPaletteColorGroup.Active  ## алиас Qt: Normal == Active
+
+type
   QImageFormatIO* {.size: sizeof(cint).} = enum
     ## Соответствует Qt::ImageConversionFlag
-    ColorOnly         = 0x00
-    MonoOnly          = 0x02
-    DiffuseDither     = 0x00
-    OrderedDither     = 0x10
-    ThresholdDither   = 0x20
-    ThresholdAlphaDither = 0x00
+    ColorOnly            = 0x00
+    MonoOnly             = 0x02
+    OrderedDither        = 0x10
+    ThresholdDither      = 0x20
     OrderedAlphaDither   = 0x04
     DiffuseAlphaDither   = 0x08
-    AutoColor         = 0x04
 
+const
+  DiffuseDither*        = QImageFormatIO.ColorOnly          ## алиас Qt
+  ThresholdAlphaDither* = QImageFormatIO.ColorOnly          ## алиас Qt
+  AutoColor*            = QImageFormatIO.OrderedAlphaDither  ## алиас Qt
+
+type
   QPageSizeId* {.size: sizeof(cint).} = enum
     A4        = 0
     A3        = 8
@@ -741,7 +750,7 @@ proc fontFamiliesList*(): seq[string] =
   for i in 0..<n.int:
     let idx=i.cint; var p:cstring
     {.emit:"static QByteArray _bfd; _bfd=_fdl.at(`idx`).toUtf8(); `p`=_bfd.constData();".}
-    result[i]=$p
+    result[i] = $p
 
 proc fontStyles*(family: string): seq[string] =
   let cs=family.cstring; var n:cint
@@ -750,7 +759,7 @@ proc fontStyles*(family: string): seq[string] =
   for i in 0..<n.int:
     let idx=i.cint; var p:cstring
     {.emit:"static QByteArray _bfst; _bfst=_fsl.at(`idx`).toUtf8(); `p`=_bfst.constData();".}
-    result[i]=$p
+    result[i] = $p
 
 proc fontPointSizes*(family, style: string): seq[int] =
   let cf=family.cstring; let cs=style.cstring; var n:cint
@@ -1021,7 +1030,7 @@ proc imageFormatsForReading*(): seq[string] =
   for i in 0..<n.int:
     let idx=i.cint; var p:cstring
     {.emit:"static QByteArray _bifrv; _bifrv=_ifr.at(`idx`); `p`=_bifrv.constData();".}
-    result[i]=$p
+    result[i] = $p
 
 proc imageFormatsForWriting*(): seq[string] =
   var n:cint
@@ -1030,7 +1039,7 @@ proc imageFormatsForWriting*(): seq[string] =
   for i in 0..<n.int:
     let idx=i.cint; var p:cstring
     {.emit:"static QByteArray _bifwv; _bifwv=_ifw.at(`idx`); `p`=_bifwv.constData();".}
-    result[i]=$p
+    result[i] = $p
 
 # ── QIcon ─────────────────────────────────────────────────────────────────────
 
@@ -1956,7 +1965,7 @@ proc mimeFormats*(d: MimeD): seq[string] =
   for i in 0..<n.int:
     let idx=i.cint; var p:cstring
     {.emit:"static QByteArray _bmfv; _bmfv=_mfl.at(`idx`).toUtf8(); `p`=_bmfv.constData();".}
-    result[i]=$p
+    result[i] = $p
 
 proc mimeData*(d: MimeD, fmt: string): string =
   let cs=fmt.cstring; var p:cstring
@@ -1974,7 +1983,7 @@ proc mimeUrls*(d: MimeD): seq[string] =
   for i in 0..<n.int:
     let idx=i.cint; var p:cstring
     {.emit:"static QByteArray _bmu; _bmu=_mul.at(`idx`).toString().toUtf8(); `p`=_bmu.constData();".}
-    result[i]=$p
+    result[i] = $p
 
 # ── QPalette ─────────────────────────────────────────────────────────────────
 

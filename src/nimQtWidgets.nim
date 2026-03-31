@@ -43,7 +43,7 @@ when defined(windows):
 # На Linux пути передаются снаружи через pkg-config
 
 
-import nimQtUtils
+import nimQtUtils, nimQtCore
 import nimQtFFI
 import strutils
 

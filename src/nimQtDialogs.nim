@@ -41,9 +41,16 @@ when defined(windows):
   {.passL: "-LC:/msys64/ucrt64/lib -lQt6Widgets -lQt6Gui -lQt6Core".}
 # На Linux пути передаются снаружи через pkg-config
 
-import nimQtUtils   ## QString, NimColor, NimPointF и др.
+
+
+
+import nimQtCore    ## QString, QVariant
+import nimQtUtils   ## NimColor, NimPointF и др.
 import nimQtFFI     ## CB, CBStr, CBInt, CBBool, константы Qt
 import nimQtWidgets ## W, VBox, HBox, Grid, Form, WizPage, ChkBox, …
+
+
+
 
 # ── Все заголовки Qt, необходимые для этого модуля ───────────────────────────
 {.emit: """
